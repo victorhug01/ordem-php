@@ -27,7 +27,7 @@ mysqli_report(MYSQLI_REPORT_OFF); // Desativa exceções automáticas
       $check = $conn->prepare("SELECT id FROM usuarios WHERE email = ?");
       $check->bind_param("s", $email);
       $check->execute();
-      $check->store_result(); // em vez de get_result()
+      $check->store_result();
 
       if ($check->num_rows > 0) {
         echo "<div class='alert alert-warning'>Este e-mail já está em uso.</div>";
