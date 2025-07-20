@@ -1,4 +1,8 @@
-<?php include 'conexao.php';
+<?php 
+include 'conexao.php';
+$msg = $_SESSION['msg'] ?? null;
+unset($_SESSION['msg']);
+
 if (!isset($_SESSION['usuario_id'])) header('Location: login.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -9,8 +13,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   $stmt = $conn->prepare("INSERT INTO produtos (codigo, nome, tempo_garantia, status) VALUES (?, ?, ?, ?)");
   $stmt->bind_param("ssii", $codigo, $nome, $garantia, $status);
-  $stmt->execute();
+
+  if ($stmt->execute()) {
+    $_SESSION['msg'] = ['type' => 'success', 'text' => 'Produto cadastrado com sucesso!'];
+  } else {
+    $_SESSION['msg'] = ['type' => 'danger', 'text' => 'Erro ao cadastrar produto.'];
+  }
+
+  header("Location: produtos.php");
+  exit;
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">

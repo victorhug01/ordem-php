@@ -1,4 +1,7 @@
 <?php include 'conexao.php';
+$msg = $_SESSION['msg'] ?? null;
+unset($_SESSION['msg']);
+
 if (!isset($_SESSION['usuario_id'])) header('Location: login.php');
 
 $produtos = $conn->query("SELECT * FROM produtos")->fetch_all(MYSQLI_ASSOC);
@@ -16,6 +19,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $_SESSION['usuario_id']
   );
   $stmt->execute();
+
+  if ($stmt->execute()) {
+    $_SESSION['msg'] = ['type' => 'success', 'text' => 'Ordem cadastrada com sucesso!'];
+  } else {
+    $_SESSION['msg'] = ['type' => 'danger', 'text' => 'Erro ao cadastrar ordem.'];
+  }
+  header("Location: ordens.php");
+  exit;
 }
 ?>
 <!DOCTYPE html>
